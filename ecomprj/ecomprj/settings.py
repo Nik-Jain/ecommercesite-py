@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     #Custom Apps
     'core',
+    'userauths',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,5 @@ JAZZMIN_SETTINGS = {
     "copyright": "Nikhil Jain",
 
 }
+
+AUTH_USER_MODEL = 'userauths.User'
