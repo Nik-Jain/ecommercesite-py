@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from userauths import forms as user_forms
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
 
@@ -30,23 +30,27 @@ def register_view(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        messages.warning(request, f"You are already Logged In!")
+        messages.warning(request, "You are already Logged In!")
         return redirect('core:index')
+    
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
         try:
             user = User.objects.get(email=email)
-        except:
+            if user:
+                user = authenticate(request, email=email, password=password)
+                if user:
+                    login(request, user)
+                    return redirect('core:index')
+                else:
+                    messages.warning(request, "User does not exists, create an account")
+        except Exception:
             messages.warning(request, f"User with {email} does not exists.")
         
-        user = authenticate(request, email=email, password=password)
-        if user:
-            login(request, user)
-            return redirect('core:index')
-        else:
-            messages.warning(request, f"User does not exisrts, create an account")
-    context = {
+    return render(request, 'userauths/sign-in.html')
 
-    }
-    return render(request, 'userauths/sign-in.html', context)
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You are logged out successfully!")
+    return redirect('userauths:sign-in')
