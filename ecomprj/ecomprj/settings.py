@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     #Custom Apps
     'core',
     'userauths',
+
+    #Installed App
+    'django_ckeditor_5',
+    'taggit',
 ]
 
 MIDDLEWARE = [
